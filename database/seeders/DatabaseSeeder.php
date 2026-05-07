@@ -15,31 +15,32 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(CarWashSeeder::class);
+        $this->call(MenuSeeder::class);
         $this->call(RoleSeeder::class);
 
-        $adminRole    = Role::where('slug', 'admin')->first();
-        $kasirRole    = Role::where('slug', 'kasir')->first();
-        $teknisiRole  = Role::where('slug', 'teknisi')->first();
+        $adminRole = Role::where('slug', 'admin')->first();
+        $kasirRole = Role::where('slug', 'kasir')->first();
+        $teknisiRole = Role::where('slug', 'teknisi')->first();
 
         User::factory()->create([
-            'name'     => 'Administrator',
-            'email'    => 'admin@carwash.test',
+            'name' => 'Administrator',
+            'email' => 'admin@carwash.test',
             'password' => Hash::make('password'),
-            'role_id'  => $adminRole?->id,
+            'role_id' => $adminRole?->id,
         ]);
 
         User::factory()->create([
-            'name'     => 'Budi Kasir',
-            'email'    => 'kasir@carwash.test',
+            'name' => 'Budi Kasir',
+            'email' => 'kasir@carwash.test',
             'password' => Hash::make('password'),
-            'role_id'  => $kasirRole?->id,
+            'role_id' => $kasirRole?->id,
         ]);
 
         User::factory()->create([
-            'name'     => 'Andi Teknisi',
-            'email'    => 'teknisi@carwash.test',
+            'name' => 'Andi Teknisi',
+            'email' => 'teknisi@carwash.test',
             'password' => Hash::make('password'),
-            'role_id'  => $teknisiRole?->id,
+            'role_id' => $teknisiRole?->id,
         ]);
     }
 }

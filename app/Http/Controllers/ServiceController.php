@@ -21,9 +21,17 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'nama_service' => ['required', 'string', 'max:255'],
+            'category_id'  => ['nullable', 'integer', 'exists:service_categories,id'],
             'harga'        => ['required', 'numeric', 'min:0'],
             'deskripsi'    => ['nullable', 'string'],
+            'image'        => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $filename = uniqid('svc_').'.'.$request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path('menu'), $filename);
+            $validated['image'] = $filename;
+        }
 
         Service::create($validated);
 
@@ -34,9 +42,19 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'nama_service' => ['required', 'string', 'max:255'],
+            'category_id'  => ['nullable', 'integer', 'exists:service_categories,id'],
             'harga'        => ['required', 'numeric', 'min:0'],
             'deskripsi'    => ['nullable', 'string'],
+            'image'        => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $filename = uniqid('svc_').'.'.$request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path('menu'), $filename);
+            $validated['image'] = $filename;
+        } else {
+            unset($validated['image']);
+        }
 
         $service->update($validated);
 

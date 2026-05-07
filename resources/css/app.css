@@ -77,11 +77,22 @@
 
     html {
         overflow-x: hidden;
+        scroll-behavior: smooth;
     }
 
     body {
         overflow-x: hidden;
         -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Hide scrollbar */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Firefox */
+    * {
+        scrollbar-width: none;
     }
 
     button,

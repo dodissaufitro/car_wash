@@ -4,6 +4,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
@@ -11,7 +12,6 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -66,6 +66,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Operasional
+    Route::get('penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+    Route::get('penjualan/create', [PenjualanController::class, 'create'])->name('penjualan.create');
+    Route::post('penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
+    Route::get('penjualan/{payment}/edit', [PenjualanController::class, 'edit'])->name('penjualan.edit');
+    Route::put('penjualan/{payment}', [PenjualanController::class, 'update'])->name('penjualan.update');
+    Route::post('penjualan/{payment}/complete', [PenjualanController::class, 'complete'])->name('penjualan.complete');
+    Route::get('penjualan/{payment}/struk', [PenjualanController::class, 'struk'])->name('penjualan.struk');
+
     Route::prefix('transactions')->name('transactions.')->group(function () {
         Route::get('/', [TransactionController::class, 'index'])->name('index');
         Route::post('/', [TransactionController::class, 'store'])->name('store');

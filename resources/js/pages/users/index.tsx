@@ -33,7 +33,7 @@ export default function UsersIndex({ users, roles }: Props) {
     const [showModal, setShowModal] = useState(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
 
-    const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm<FormData>({
+    const { data, setData, post, put, transform, processing, errors, reset, clearErrors } = useForm<FormData>({
         name: '',
         email: '',
         password: '',
@@ -61,18 +61,16 @@ export default function UsersIndex({ users, roles }: Props) {
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        const payload = {
-            ...data,
-            role_id: data.role_id || null,
-        };
+        transform((d) => ({
+            ...d,
+            role_id: d.role_id || null,
+        }));
         if (editingUser) {
             put(route('users.update', editingUser.id), {
-                data: payload as any,
                 onSuccess: () => setShowModal(false),
             });
         } else {
             post(route('users.store'), {
-                data: payload as any,
                 onSuccess: () => setShowModal(false),
             });
         }
@@ -117,10 +115,13 @@ export default function UsersIndex({ users, roles }: Props) {
                             <p className="mt-0.5 text-sm text-slate-500">Kelola akun dan hak akses pengguna</p>
                         </div>
                     </div>
-                    <Button onClick={openCreate} className="bg-sky-600 hover:bg-sky-700">
-                        <Plus className="mr-2 h-4 w-4" />
+                    <button
+                        onClick={openCreate}
+                        className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-sky-200 transition hover:brightness-105 hover:shadow-sky-300 active:scale-95"
+                    >
+                        <Plus className="h-4 w-4" />
                         Tambah Pengguna
-                    </Button>
+                    </button>
                 </div>
 
                 <div className="overflow-x-auto overflow-hidden rounded-xl border bg-white shadow-sm">
@@ -167,18 +168,23 @@ export default function UsersIndex({ users, roles }: Props) {
                                         })}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <div className="flex items-center justify-center gap-2">
-                                            <Button size="sm" variant="ghost" onClick={() => openEdit(user)}>
-                                                <Edit2 className="h-4 w-4" />
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="ghost"
-                                                className="text-red-500 hover:text-red-700"
-                                                onClick={() => handleDelete(user)}
+                                        <div className="flex items-center justify-center gap-1.5">
+                                            <button
+                                                onClick={() => openEdit(user)}
+                                                className="flex items-center gap-1.5 rounded-lg bg-sky-50 px-2.5 py-1.5 text-xs font-medium text-sky-700 ring-1 ring-sky-200 transition hover:bg-sky-100 active:scale-95"
+                                                title="Edit"
                                             >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                                <Edit2 className="h-3.5 w-3.5" />
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(user)}
+                                                className="flex items-center gap-1.5 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-600 ring-1 ring-red-200 transition hover:bg-red-100 active:scale-95"
+                                                title="Hapus"
+                                            >
+                                                <Trash2 className="h-3.5 w-3.5" />
+                                                Hapus
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -262,12 +268,21 @@ export default function UsersIndex({ users, roles }: Props) {
                     </form>
 
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowModal(false)}>
+                        <button
+                            type="button"
+                            onClick={() => setShowModal(false)}
+                            className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 active:scale-95"
+                        >
                             Batal
-                        </Button>
-                        <Button type="submit" form="user-form" disabled={processing} className="bg-sky-600 hover:bg-sky-700">
+                        </button>
+                        <button
+                            type="submit"
+                            form="user-form"
+                            disabled={processing}
+                            className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-sky-200 transition hover:brightness-105 disabled:opacity-60 active:scale-95"
+                        >
                             {processing ? 'Menyimpan...' : 'Simpan'}
-                        </Button>
+                        </button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
